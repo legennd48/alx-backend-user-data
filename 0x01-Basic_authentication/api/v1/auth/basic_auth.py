@@ -9,17 +9,6 @@ class BasicAuth(Auth):
     '''
     class temporarily empty
     '''
-    def extract_base64_authorization_header(
-            self, authorization_header: str) -> str:
-        '''
-        Extracts baser64 part of the authorization header
-        '''
-        reg_patter = r'Basic (?P<token>.+)'
-        if type(authorization_header) == str:
-            enc_string = re.fullmatch(pattern, authorization_header.strip())
-            if enc_string is not None:
-                return enc_string.group('token')
-        return None
 
     def extract_base64_authorization_header(
             self, authorization_header: str) -> str:
