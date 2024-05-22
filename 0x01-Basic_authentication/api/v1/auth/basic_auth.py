@@ -5,6 +5,7 @@ Basic authentication
 from api.v1.auth.auth import Auth
 import base64
 import re
+from typing import TypeVar
 
 
 class BasicAuth(Auth):
@@ -67,3 +68,32 @@ class BasicAuth(Auth):
         user = match.group('user')
         pw = match.group('pass')
         return user, pw
+
+    def user_object_from_credentials(
+            self, user_email: str, user_pwd: str) -> TypeVar('User'):
+        """
+        Returns a User instance based on the provided email and password.
+
+        Args:
+            user_email (str): The email address of the user.
+            user_pwd (str): The password of the user.
+
+        Returns:
+            User: The User instance if credentials are valid, otherwise None.
+        """
+
+        if not isinstance(user_email, str) or not isinstance(user_pwd, str):
+            return None  # Return None if not strings
+
+        try:
+            users = User.search({'email': user_email})
+        except Exception:
+            return None  # Return None on database errors
+
+        if len(users) <= 0:
+            return None  # Return None if no user with email found
+
+        if users[0].is_valid_password(user_pwd):
+            return users[0]  # Return User if password is valid
+
+        return None  # Return None if password is invalid
