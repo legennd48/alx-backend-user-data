@@ -43,7 +43,8 @@ class BasicAuth(Auth):
         if not isinstance(base64_authorization_header, str):
             return None
         try:
-            decoded = base64.b64decode(base64_authorization_header)
+            decoded = base64.b64decode(base64_authorization_header,
+                                       validate=True)
             return decoded.decode('utf-8')
-        except base64.b64decodeError:
+        except (base64.binascii.Error, UnicodeDecodeError):
             return None
