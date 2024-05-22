@@ -4,6 +4,7 @@ Basic authentication
 '''
 from api.v1.auth.auth import Auth
 import base64
+import re
 
 
 class BasicAuth(Auth):
@@ -48,3 +49,21 @@ class BasicAuth(Auth):
             return decoded.decode('utf-8')
         except (base64.binascii.Error, UnicodeDecodeError):
             return None
+
+    def extract_user_credentials(
+            self, decoded_base64_authorization_header: str) -> (str, str):
+        '''
+        extracts and returns emailr and pw
+        '''
+        if decoded_base64_authorization_header is None:
+            return None, None
+        if not isinstance(decoded_base64_authorization_header, str):
+            return None, None
+        if ':' not in decoded_base64_authorization_header:
+            return None, None
+        pattern = r'(?P<user>[^:]+):(?P<pass>.+)'
+        match = re.fullmatch(
+            pattern, decoded_base64_authorization_header.strip())
+        user = match.group('user')
+        pw = match.group('pass')
+        return user, pw
