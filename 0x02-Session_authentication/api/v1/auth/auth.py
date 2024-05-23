@@ -23,8 +23,13 @@ class Auth():
         path = path.rstrip('/') + '/'  # Add trailing slash if missing
         # Check if path is a prefix of any excluded path (slash tolerant)
         for excluded_path in excluded_paths:
-            if path.startswith(excluded_path):
-                return False
+            if excluded_path.endswith('*'):
+                base_path = excluded_path[:-1]
+                if path.startswith(base_path):
+                    return False
+            else:
+                if path == excluded_path:
+                    return False
         return True
 
     def authorization_header(self, request=None) -> str:
