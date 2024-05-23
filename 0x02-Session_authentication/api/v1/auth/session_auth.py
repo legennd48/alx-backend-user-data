@@ -4,6 +4,7 @@ Module for session authentication
 '''
 from .auth import Auth
 from flask import session
+from models.user import User
 import uuid
 
 
@@ -30,3 +31,10 @@ class SessionAuth(Auth):
         if session_id is None or not isinstance(session_id, str):
             return None
         return self.user_id_by_session_id.get(session_id)
+    
+    def current_user(self, request=None) -> User:
+        '''
+        return user instance based on _my_session_id
+        '''
+        user_id = self.user_id_for_session_id(self.session_cookie(request))
+        return User.get(user_id)
