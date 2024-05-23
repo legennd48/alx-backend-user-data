@@ -4,6 +4,7 @@ Basic authentication
 '''
 from api.v1.auth.auth import Auth
 import base64
+from models.user import User
 import re
 from typing import TypeVar
 
@@ -93,8 +94,9 @@ class BasicAuth(Auth):
         if len(users) <= 0:
             return None  # Return None if no user with email found
 
-        if users[0].is_valid_password(user_pwd):
-            return users[0]  # Return User if password is valid
+        for user in users:
+            if user.is_valid_password(user_pwd):
+                return user  # Return User if password is valid
 
         return None  # Return None if password is invalid
 
