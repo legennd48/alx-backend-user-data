@@ -40,3 +40,14 @@ class Auth:
             new_user = self._db.add_user(email, new_password)
             return new_user
         raise ValueError("User {} already exists".format(email))
+
+    def valid_login(self, email: str, password: str) -> bool:
+        '''
+        locates user by pemail and checks that
+        password matches what is saved
+        '''
+        try:
+            user = self._db.find_user_by(email=email)
+        except NoResultFound:
+            return False
+        return bcrypt.checkpw(password.encode('utf-8'), user.hashed_password)
