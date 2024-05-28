@@ -66,10 +66,14 @@ class DB:
         user = self.find_user_by(id=user_id)
         if user is None:
             return
+        updates = {}
         for key, value in kwargs.items():
-            if not hasattr(User, key):
-                raise ValueError
-            user.key = value
-        
+            if hasattr(User, key):
+                updates[getattr(User, key)] = value
+            else:
+                raise ValueError("Invalid field: {}".format(key))
+
+        # Directly update the user in the database using updates
+        self._session.query(User).filter(User.id == user_id).update(updates)
         self._session.commit()
         return None
