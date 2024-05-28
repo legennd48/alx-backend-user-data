@@ -59,7 +59,7 @@ class Auth:
         except NoResultFound:
             return False
         return bcrypt.checkpw(password.encode('utf-8'), user.hashed_password)
-    
+
     def create_session(self, email: str) -> str:
         '''
         takes user umail, creats a session id and returns it
@@ -72,4 +72,3 @@ class Auth:
         session_id = _generate_uuid()
         self._db.update_user(user.id, session_id=session_id)
         return session_id
-
