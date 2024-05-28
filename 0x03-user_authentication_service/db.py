@@ -64,9 +64,12 @@ class DB:
         then updated the user at given id
         '''
         user = self.find_user_by(id=user_id)
+        if user is None:
+            return
         for key, value in kwargs.items():
             if not hasattr(User, key):
                 raise ValueError
             user.key = value
-        self.__session.commit()
+        
+        self._session.commit()
         return None
