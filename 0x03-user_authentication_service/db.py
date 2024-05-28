@@ -64,16 +64,9 @@ class DB:
         then updated the user at given id
         '''
         user = self.find_user_by(id=user_id)
-        if user is None:
-            return # return, nothing to update
-        updates = {}
         for key, value in kwargs.items():
-            if hasattr(User, key):
-                updates[getattr(User, key)] = value
-            else:
-                raise ValueError()
-
-        # Directly update the user in the database using updates
-        self._session.query(User).filter(User.id == user_id).update(updates)
+            if not hasattr(User, key):
+                raise ValueError
+            user.key = value
         self._session.commit()
         return None
