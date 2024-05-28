@@ -37,5 +37,5 @@ class Auth:
         if query is not None:
             raise ValueError("User {} already exists".format(email))
         new_password = _hash_password(password)
-        session.add(User(email=email, hashed_password=new_password))
-        session.commit()
+        new_user = self._db.add_user(email, new_password)
+        return new_user
