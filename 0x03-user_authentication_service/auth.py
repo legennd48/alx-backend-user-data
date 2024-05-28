@@ -4,6 +4,7 @@ authentication methods
 '''
 import bcrypt
 from db import DB
+from sqlalchemy.orm.exc import NoResultFound
 from user import User
 
 
@@ -32,10 +33,10 @@ class Auth:
         '''
         handles the new user registeration
         '''
-        session = self._db._session
-        query = session.query(User).filter(User.email == email).first()
-        if query is not None:
-            raise ValueError("User {} already exists".format(email))
-        new_password = _hash_password(password)
-        new_user = self._db.add_user(email, new_password)
-        return new_user
+        try:
+            self._db.find_user_by(email=email)
+        except NoResultFound:
+            new_password = _hash_password(password)
+            new_user = self._db.add_user(email, new_password)
+            return new_user
+        raise ValueError("User {} already exists".format(email))
