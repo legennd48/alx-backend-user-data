@@ -56,13 +56,12 @@ def logoout():
     handles the logout operation
     destroys session and redirects to root
     '''
-    if 'session_id' in request.cookies:
-        session_id = request.cookies['session_id']
-        user = AUTH.get_user_from_session_id(session_id)
-        if user is not None:
-            AUTH.destroy_session(user.id)
-            return redirect('/')
-        abort(403)
+    session_id = request.cookies['session_id']
+    user = AUTH.get_user_from_session_id(session_id)
+    if user is not None:
+        AUTH.destroy_session(user.id)
+        return redirect('/')
+    abort(403)
 
 
 if __name__ == "__main__":
