@@ -87,5 +87,5 @@ class Auth:
         '''
         removes the session id from
         '''
-        self._db.update_user(user_id, session_is=None)
+        self._db.update_user(user_id, session_id=None)
         return None
