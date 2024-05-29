@@ -68,7 +68,7 @@ class DB:
             return None
         for key, value in kwargs.items():
             if not hasattr(User, key):
-                raise ValueError
+                raise ValueError()
             self._session.query(User).filter(
                 User.id == user_id).update({key: value})
         self._session.commit()
