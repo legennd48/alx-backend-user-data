@@ -70,6 +70,6 @@ class DB:
             if not hasattr(User, key):
                 raise ValueError()
             self._session.query(User).filter(
-                User.id == user_id).update({key: value})
+                User.id == user_id).update({key: value}, synchronize_session=False)
         self._session.commit()
         return None
