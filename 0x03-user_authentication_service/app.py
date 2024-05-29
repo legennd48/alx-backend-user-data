@@ -51,7 +51,7 @@ def login() -> str:
 
 
 @app.route('/sessions', methods=['DELETE'], strict_slashes=False)
-def logoout():
+def logoout() -> str:
     '''
     handles the logout operation
     destroys session and redirects to root
