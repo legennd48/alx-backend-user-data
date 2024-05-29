@@ -2,7 +2,7 @@
 '''
 Basic flask app
 '''
-from flask import abort, Flask, jsonify, request, redirect
+from flask import abort, Flask, jsonify, redirect, request,
 from auth import Auth
 from user import User
 
@@ -56,12 +56,13 @@ def logout() -> str:
     handles the logout operation
     destroys session and redirects to root
     '''
-    session_id = request.cookies.get("session_id")
-    user = AUTH.get_user_from_session_id(session_id)
-    if user is None:
-        abort(403)
-    AUTH.destroy_session(user.id)
-    return redirect('/')
+    if session_id in request.cookies:
+        session_id = request.cookies.get("session_id")
+        user = AUTH.get_user_from_session_id(session_id)
+        if user is not None:
+            AUTH.destroy_session(user.id)
+            return redirect('/')
+    abort(403)
 
 
 if __name__ == "__main__":
