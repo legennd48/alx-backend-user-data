@@ -58,18 +58,23 @@ class DB:
             raise NoResultFound
         return query
 
-    def update_user(self, user_id, **kwargs) -> None:
-        '''
-        recievs user id and datat,
-        then updated the user at given id
-        '''
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """
+        Updates a user based on a given ID.
+
+        Raises a ValueError if an attempt is made to update a non-existent
+        attribute of the User class.
+        """
         user = self.find_user_by(id=user_id)
         if user is None:
             return None
+
+        update_source = {}
         for key, value in kwargs.items():
             if not hasattr(User, key):
                 raise ValueError()
-            self._session.query(User).filter(
-                User.id == user_id).update({key: value}, synchronize_session=False)
+            update_source[getattr(User, key)] = value
+
+        self._session.query(User).filter(User.id == user_id).update(
+            update_source, synchronize_session=False)
         self._session.commit()
-        return None
